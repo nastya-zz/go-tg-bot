@@ -91,7 +91,7 @@ func (s Storage) Remove(page *storage.Page) (err error) {
 	return nil
 }
 
-func (s Storage) IsExists(page *storage.Page) (bool, error) {
+func (s Storage) IsExist(page *storage.Page) (bool, error) {
 	fName, err := fileName(page)
 	if err != nil {
 		msg := fmt.Sprintf("can't search page %s", fName)
