@@ -5,6 +5,7 @@ import (
 	"errors"
 	"example/hello/lib/e"
 	"example/hello/storage"
+	"fmt"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -73,12 +74,63 @@ func (s Storage) PickRandom(userName string) (page *storage.Page, err error) {
 
 	file := files[n]
 
-	//open
-
+	return s.decodePage(filepath.Join(s.basePath, file.Name()))
 }
 
-func (s Storage) decodePage(filePath string) {}
+func (s Storage) Remove(page *storage.Page) (err error) {
+	fName, err := fileName(page)
+	if err != nil {
+		msg := fmt.Sprintf("can't search  for remove page %s", fName)
+		return e.Wrap(msg, err)
+	}
 
-func fileName(page *storage.Page) (string, err) {
+	filePath := filepath.Join(s.basePath, page.UserName, fName)
+	if err = os.Remove(filePath); err != nil {
+		msg := fmt.Sprintf("can't remove page by path:  %s", filePath)
+		return e.Wrap(msg, err)
+	}
+
+	return nil
+}
+
+func (s Storage) IsExists(page *storage.Page) (bool, error) {
+	fName, err := fileName(page)
+	if err != nil {
+		msg := fmt.Sprintf("can't search page %s", fName)
+		return false, e.Wrap(msg, err)
+	}
+
+	filePath := filepath.Join(s.basePath, page.UserName, fName)
+
+	switch _, err = os.Stat(filePath); {
+	case errors.Is(err, os.ErrNotExist):
+		return false, nil
+	case err != nil:
+		msg := fmt.Sprintf("can't check if file exists: %s", filePath)
+		return false, e.Wrap(msg, err)
+	}
+
+	return true, nil
+}
+
+func (s Storage) decodePage(filePath string) (p *storage.Page, err error) {
+	defer func() { err = e.WrapIfErr("can't decode file", err) }()
+
+	f, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = f.Close() }()
+
+	var page storage.Page
+
+	if err := gob.NewDecoder(f).Decode(&page); err != nil {
+		return nil, err
+	}
+
+	return &page, nil
+}
+
+func fileName(page *storage.Page) (string, error) {
 	return page.Hash()
 }
