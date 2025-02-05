@@ -6,6 +6,7 @@ import (
 	"example/hello/lib/e"
 	"example/hello/storage"
 	"fmt"
+	"log"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -56,7 +57,10 @@ func (s Storage) Save(page *storage.Page) (err error) {
 func (s Storage) PickRandom(userName string) (page *storage.Page, err error) {
 	defer func() { err = e.WrapIfErr("can't pick random", err) }()
 
-	filePath := filepath.Join(s.basePath, page.UserName)
+	filePath := filepath.Join(s.basePath, userName)
+	log.Printf("Url dir %s :", filePath)
+
+	//todo: check user folder
 
 	files, err := os.ReadDir(filePath)
 	if err != nil {

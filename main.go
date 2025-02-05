@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	tgBotHost   = "https://api.telegram.org"
-	storagePath = "storage"
+	tgBotHost   = "api.telegram.org"
+	storagePath = "files_storage"
 	batchSize   = 100
 )
 
@@ -27,7 +27,7 @@ func main() {
 }
 
 func mustToken() string {
-	token := flag.String("token-bot-token", "", "tg token access")
+	token := flag.String("tg-bot-token", "", "tg token access")
 
 	flag.Parse()
 

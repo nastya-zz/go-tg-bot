@@ -74,7 +74,7 @@ func (p *Processor) sendRandom(chatID int, pageURL string, username string) (err
 		return p.tg.SendMassage(chatID, msgNoSavedPages)
 	}
 
-	if err = p.tg.SendMassage(chatID, page.URL); err != nil {
+	if err = p.tg.SendMassage(chatID, pageURL); err != nil {
 		return err
 	}
 	return p.storage.Remove(page)
