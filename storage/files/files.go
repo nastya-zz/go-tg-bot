@@ -75,8 +75,10 @@ func (s Storage) PickRandom(userName string) (page *storage.Page, err error) {
 		return nil, storage.ErrNoSavedPages
 	}
 
-	rand.Seed(time.Now().UnixNano())
-	n := rand.Intn(len(files))
+	// Create a new random number generator with a custom seed
+	source := rand.NewSource(time.Now().UnixNano())
+	rng := rand.New(source)
+	n := rng.Intn(len(files))
 
 	file := files[n]
 

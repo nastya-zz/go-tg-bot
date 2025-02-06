@@ -11,10 +11,10 @@ import (
 )
 
 const (
-	tgBotHost   = "api.telegram.org"
-	storagePath = "files_storage"
-	batchSize   = 100
-	sqlitePath  = "data/sqlite/storage.db"
+	tgBotHost = "api.telegram.org"
+	//storagePath = "files_storage"
+	batchSize  = 100
+	sqlitePath = "data/sqlite/storage.db"
 )
 
 func main() {
