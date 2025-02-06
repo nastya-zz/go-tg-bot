@@ -76,7 +76,7 @@ func (s Storage) PickRandom(userName string) (page *storage.Page, err error) {
 
 	file := files[n]
 
-	return s.decodePage(filepath.Join(s.basePath, file.Name()))
+	return s.decodePage(filepath.Join(filePath, file.Name()))
 }
 
 func (s Storage) Remove(page *storage.Page) (err error) {
@@ -118,6 +118,8 @@ func (s Storage) IsExist(page *storage.Page) (bool, error) {
 func (s Storage) decodePage(filePath string) (p *storage.Page, err error) {
 	defer func() { err = e.WrapIfErr("can't decode file", err) }()
 
+	log.Printf("Decode file %s", filePath)
+
 	f, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
@@ -129,6 +131,8 @@ func (s Storage) decodePage(filePath string) (p *storage.Page, err error) {
 	if err := gob.NewDecoder(f).Decode(&page); err != nil {
 		return nil, err
 	}
+
+	log.Printf("Decode page %s", &page)
 
 	return &page, nil
 }

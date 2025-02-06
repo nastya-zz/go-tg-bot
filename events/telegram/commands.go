@@ -25,7 +25,7 @@ func (p *Processor) doCmd(text string, chatId int, username string) error {
 
 	switch text {
 	case RndCmd:
-		return p.sendRandom(chatId, text, username)
+		return p.sendRandom(chatId, username)
 	case HelpCmd:
 		return p.sendHelp(chatId)
 	case StartCmd:
@@ -63,7 +63,7 @@ func (p *Processor) savePage(chatID int, pageURL string, username string) (err e
 
 }
 
-func (p *Processor) sendRandom(chatID int, pageURL string, username string) (err error) {
+func (p *Processor) sendRandom(chatID int, username string) (err error) {
 	defer func() { err = e.WrapIfErr("can't do command: send random page", err) }()
 
 	page, err := p.storage.PickRandom(username)
@@ -74,7 +74,7 @@ func (p *Processor) sendRandom(chatID int, pageURL string, username string) (err
 		return p.tg.SendMassage(chatID, msgNoSavedPages)
 	}
 
-	if err = p.tg.SendMassage(chatID, pageURL); err != nil {
+	if err = p.tg.SendMassage(chatID, page.URL); err != nil {
 		return err
 	}
 	return p.storage.Remove(page)
