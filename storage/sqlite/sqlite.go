@@ -52,7 +52,7 @@ func (s *Storage) PickRandom(ctx context.Context, userName string) (*storage.Pag
 func (s *Storage) Remove(ctx context.Context, page *storage.Page) error {
 	q := `DELETE FROM pages WHERE url = ? AND user_name = ?`
 
-	if _, err := s.db.ExecContext(ctx, q, page.URL); err != nil {
+	if _, err := s.db.ExecContext(ctx, q, page.URL, page.UserName); err != nil {
 		return e.Wrap("can't remove page", err)
 	}
 	return nil
