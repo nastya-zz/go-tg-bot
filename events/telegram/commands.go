@@ -10,6 +10,12 @@ import (
 	"strings"
 )
 
+/**
+rnd - Получение рандомной странички
+help - Описание работы бота
+start - Начать работу бота
+*/
+
 const (
 	RndCmd   = "/rnd"
 	HelpCmd  = "/help"
