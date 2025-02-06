@@ -60,7 +60,11 @@ func (s Storage) PickRandom(userName string) (page *storage.Page, err error) {
 	filePath := filepath.Join(s.basePath, userName)
 	log.Printf("Url dir %s :", filePath)
 
-	//todo: check user folder
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		if err = os.MkdirAll(filePath, defaultDirPerm); err != nil {
+			return nil, err
+		}
+	}
 
 	files, err := os.ReadDir(filePath)
 	if err != nil {
